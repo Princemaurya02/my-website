@@ -4,7 +4,7 @@ import { profileData } from "../data/links";
 import { useState, useRef, useEffect } from "react";
 
 export default function Hero() {
-  const [avatar, setAvatar] = useState(null);
+  const [avatar, setAvatar] = useState(profileData.avatar || null);
   const [hovering, setHovering] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -12,6 +12,7 @@ export default function Hero() {
   useEffect(() => {
     const saved = localStorage.getItem("dev-hub-avatar");
     if (saved) setAvatar(saved);
+    else if (profileData.avatar) setAvatar(profileData.avatar);
   }, []);
 
   // Handle file upload

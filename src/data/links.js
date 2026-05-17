@@ -2,7 +2,7 @@ export const profileData = {
   name: "Prince Maurya",
   title: "Full Stack Developer",
   bio: "Building modern web experiences with React, Node.js & beyond. Passionate about clean code and beautiful UI.",
-  avatar: null,
+  avatar: "/dp.jpg",
   initials: "PM",
   stats: [
     { value: "42+", label: "Projects" },
@@ -79,7 +79,7 @@ export const quickLinks = [
   {
     id: 3,
     emoji: "⚛️",
-    title: "React Roadmap 2024",
+    title: "React Roadmap 2026",
     subtitle: "Complete guide from beginner to advanced",
     category: "Learning",
     url: "https://github.com/Princemaurya02/Full-Stack-Developer-Roadmap-2026",
