@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Copy, Share2 } from "lucide-react";
 
@@ -19,6 +19,53 @@ export default function App() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const isScrollingRef = useRef(false);
+
+  // Scroll to section when nav tab is clicked
+  const handleNavChange = (id) => {
+    setActiveNav(id);
+    const sectionMap = {
+      home: "section-home",
+      links: "section-links",
+      featured: "section-featured",
+      profile: "section-profile",
+    };
+    const targetId = sectionMap[id];
+    if (!targetId) return;
+    const el = document.getElementById(targetId);
+    if (el) {
+      isScrollingRef.current = true;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => { isScrollingRef.current = false; }, 800);
+    }
+  };
+
+  // Auto-update active nav based on scroll position
+  useEffect(() => {
+    const sections = [
+      { id: "section-profile", nav: "profile" },
+      { id: "section-featured", nav: "featured" },
+      { id: "section-links", nav: "links" },
+      { id: "section-home", nav: "home" },
+    ];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (isScrollingRef.current) return;
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const matched = sections.find((s) => s.id === entry.target.id);
+            if (matched) setActiveNav(matched.nav);
+          }
+        });
+      },
+      { threshold: 0.4 }
+    );
+    sections.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
 
   // Filter links
   const filteredLinks = quickLinks.filter((link) => {
@@ -108,11 +155,13 @@ export default function App() {
 
         {/* Sections */}
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          {/* Hero */}
-          <Hero />
-
-          {/* Social icons */}
-          <SocialIcons />
+          {/* Profile / Hero */}
+          <div id="section-profile">
+            <div id="section-home">
+              <Hero />
+              <SocialIcons />
+            </div>
+          </div>
 
           {/* Divider */}
           <div
@@ -125,7 +174,9 @@ export default function App() {
           />
 
           {/* Featured card */}
-          <FeaturedCard />
+          <div id="section-featured">
+            <FeaturedCard />
+          </div>
 
           {/* Divider */}
           <div
@@ -137,16 +188,14 @@ export default function App() {
             }}
           />
 
-          {/* Search */}
-          <SearchBar value={search} onChange={setSearch} />
-
-          {/* Categories */}
-          <CategoryFilter active={activeCategory} onChange={setActiveCategory} />
-
-          {/* Quick links */}
-          <AnimatePresence mode="wait">
-            <QuickLinks key={activeCategory + search} links={filteredLinks} />
-          </AnimatePresence>
+          {/* Search + Links */}
+          <div id="section-links">
+            <SearchBar value={search} onChange={setSearch} />
+            <CategoryFilter active={activeCategory} onChange={setActiveCategory} />
+            <AnimatePresence mode="wait">
+              <QuickLinks key={activeCategory + search} links={filteredLinks} />
+            </AnimatePresence>
+          </div>
 
           {/* Footer */}
           <Footer />
@@ -156,7 +205,7 @@ export default function App() {
       {/* Bottom nav */}
       <BottomNav
         active={activeNav}
-        onChange={setActiveNav}
+        onChange={handleNavChange}
         onShare={handleShare}
       />
     </div>
