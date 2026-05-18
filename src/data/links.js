@@ -37,7 +37,7 @@ export const socialLinks = [
     id: "youtube",
     label: "YouTube",
     icon: "youtube",
-    url: "www.youtube.com/@Princevibezone",
+    url: "https://www.youtube.com/@Princevibezone",
     color: "#ff0000",
   },
  
@@ -120,7 +120,7 @@ export const quickLinks = [
     title: "YouTube Channel",
     subtitle: "Web dev tutorials & coding vlogs",
     category: "Videos",
-    url: "www.youtube.com/@Princevibezone",
+    url: "https://www.youtube.com/@Princevibezone",
     badge: null,
   },
   {
